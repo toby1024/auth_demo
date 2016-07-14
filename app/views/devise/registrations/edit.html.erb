@@ -1,0 +1,29 @@
+<h2>修改密码</h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <div class="field">
+    <%= f.label :新密码 %> <i>(如果不想修改则保持空白)</i><br />
+    <%= f.password_field :password, autocomplete: "off" %>
+    <% if @minimum_password_length %>
+      <br />
+      <em>密码长度最小为<%= @minimum_password_length %>位</em>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= f.label :确认密码 %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :当前密码 %> <i>(我们需要通过当前密码来验证您的身份)</i><br />
+    <%= f.password_field :current_password, autocomplete: "off" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "更新" %>
+  </div>
+<% end %>
+<%= link_to "返回", :back %>

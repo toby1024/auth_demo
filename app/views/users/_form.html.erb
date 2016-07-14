@@ -1,0 +1,18 @@
+<div class="modal-dialog" role="document">
+  <%= bootstrap_form_for(@user, layout: :horizontal) do |f| %>
+      <%= f.text_field :username, label: "姓名", help: "必填" %>
+      <%= f.text_field :phone, label: "手机", help: "必填" %>
+      <%= f.text_field :email, label: "邮箱", help: "必填" %>
+      <%= f.text_field :company, label: "公司", help: "必填" %>
+      <%= f.text_field :password, label: "密码", help: "必填" %>
+      <%= f.text_field :f_code, label: "F码", help: "必填" %>
+      <%= f.collection_check_boxes :role_ids, allRole, :id, :description, label: "角色", inline: true %>
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+          <%= f.submit '保存用户信息', :class => 'btn btn-primary' %>
+          <%= link_to t('.cancel', :default => t("helpers.links.cancel")), users_path, :class => 'btn btn-default' %>
+        </div>
+      </div>
+
+  <% end %>
+</div>

@@ -1,0 +1,49 @@
+<div class="modal-dialog" role="document">
+  <%= bootstrap_form_for(@permission, layout: :horizontal) do |f| %>
+      <%= f.text_field :description, label: "权限名称", help: "必填" %>
+      <%= f.select(:module_name,
+                   options_from_collection_for_select(parent_menus, "name", "name", @permission.module_name),
+                   {:label => "所属模块", :class => 'form-control'},
+                   data: {
+                       remote: true,
+                       url: url_for(:controller => 'permissions', :action => 'get_menus_by_module'),
+                       type: 'json'
+                   }) %>
+      <%= f.select(:menu_name,
+                   "<option value=''>#{t('请选择菜单')}</option>".html_safe+options_from_collection_for_select(all_menus, "name", "name", @permission.menu_name),
+                   {:label => "所属菜单"}, {:class => 'form-control'}) %>
+      <%= f.text_field :action, label: "action", help: "必填" %>
+      <%= f.text_field :subject, label: "subject", help: "必填" %>
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+          <%= f.submit '保存权限信息', :class => 'btn btn-primary' %>
+          <%= link_to t('.cancel', :default => t("helpers.links.cancel")), permissions_path, :class => 'btn btn-default' %>
+        </div>
+      </div>
+
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  $("#permission_module_name").on('ajax:complete', function (evt, xhr, options) {
+    if (options == 'success') {
+      $("#permission_menu_name").empty();
+      opt = $('<option/>')
+      opt.attr('value', '')
+      opt.text('请选择菜单')
+      opt.appendTo($("#permission_menu_name"))
+      json_data = xhr.responseJSON
+      if (json_data.length > 0) {
+        for (i = 0; i < json_data.length; i++) {
+          opt = $('<option/>')
+          opt.attr('value', json_data[i].name)
+          opt.text(json_data[i].name)
+          opt.appendTo($("#permission_menu_name"))
+        }
+      }
+    } else {
+      alert('获取菜单数据出错，请联系开发人员')
+    }
+  });
+
+</script>

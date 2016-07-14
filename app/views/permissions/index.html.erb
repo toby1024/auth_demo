@@ -1,0 +1,64 @@
+<%- model_class = Permission -%>
+<meta charset="utf-8">
+<div class="page-header">
+  <h3>查询
+    <small>权限信息</small>
+  </h3>
+</div>
+<%= search_form_for @q, :html => {:class => "pjax-form form-inline well"} do |f| %>
+    <div class="form-group">
+      <label for="username">权限名</label>
+      <%= f.search_field :description_cont, :class => 'form-control', :placeholder => "请输入权限名" %>
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-search"></i>查 询</button>
+<% end %>
+
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active"><a href="#"><i class="fa fa-list"></i> 查询</a></li>
+
+  <li role="presentation">
+    <%= link_to content_tag(:i, "", :class => 'fa fa-plus') + " " + t('.new', :default => t("helpers.links.new")),
+                new_permission_path,
+                :class => '' %>
+  </li>
+</ul>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>序号</th>
+    <th>权限名称</th>
+    <th><%= sort_link(@q, :module_name, "所属模块") %></th>
+    <th><%= sort_link(@q, :menu_name, "所属菜单") %></th>
+    <th>action</th>
+    <th>subject</th>
+    <th><%= t '.actions', :default => t("helpers.actions") %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @permissions.each_with_index do |permission, index| %>
+      <tr>
+        <td><%= (@page.to_i-1)*@pageSize+index+1 %></td>
+        <td><%= permission.description %></td>
+        <td><%= permission.module_name %></td>
+        <td><%= permission.menu_name %></td>
+        <td><%= permission.action %></td>
+        <td><%= permission.subject %></td>
+        <td>
+          <% if can? :edit, Permission %>
+              <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_permission_path(permission), :class => 'btn btn-default btn-xs' %>
+              <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                          permission_path(permission),
+                          :method => :delete,
+                          :data => {:confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?'))},
+                          :class => 'btn btn-xs btn-danger' %>
+          <% end %>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<nav class="pagination pagination-sm">
+  <li class="page"><a>共 <%= @permissions.total_count %>条 <%= @permissions.total_pages %>页</a></li>
+  <%= paginate @permissions %>
+</nav>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKIO客户关系管理系统</title>
+  <%= stylesheet_link_tag    'main', media: 'all', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<div class="container">
+  <div class="login">
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name))  do |f| %>
+        <div class="logo"><h1>SKIO客户关系管理系统</h1></div>
+        <div class="login_form">
+          <div class="user">
+            <div class="uinArea">
+              <label class="input-tips" for="username">账号：</label>
+              <%= f.text_field :phone,class: "text_value", autofocus: true, required: true %>
+            </div>
+            <div class="pwdArea">
+              <label class="input-tips" for="password">密码：</label>
+              <%= f.password_field :password, class: "text_value", required: true, autocomplete: "off" %>
+            </div>
+
+            <p class="wrongTip"><%= alert %></p>
+
+            <% if devise_mapping.rememberable? -%>
+                <div class="checkbox" style="margin-left: 7%;">
+                  <%= f.check_box :remember_me %>
+                  <%= f.label :记住我 %>
+                </div>
+            <% end -%>
+            <%= f.submit "登 录", class: "button" %>
+            <div class="clear"></div>
+          </div>
+        </div>
+        <div class="foot">Copyright &copy; 2016.时空电动汽车股份有限公司.</div>
+    <% end %>
+  </div>
+</div>
+</body>
+

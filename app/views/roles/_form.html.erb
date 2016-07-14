@@ -1,0 +1,104 @@
+<div class="modal-dialog" role="document">
+  <%= bootstrap_form_for(@role, layout: :horizontal, :multipart => true, :html => {:class => 'pjax-form'}) do |f| %>
+      <%= f.text_field :name, label: "角色名称", help: "必填" %>
+      <%= f.text_field :description, label: "角色备注", help: "必填" %>
+      <div style="display:none;">
+        <%= f.collection_check_boxes :item_ids, all_menus, :id, :name, label: "菜单", inline: true %>
+        <%= f.collection_check_boxes :permission_ids, all_permissions, :id, :description, label: "权限", inline: true %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :菜单, :class => 'control-label col-lg-2' %>
+        <div class="col-lg-10" style="float: left;">
+          <div class="content_wrap zzjgxx" style="height: 200px;width:100%;border: 1px solid #ccc;overflow: scroll;">
+            <div class="zTreeDemoBackground left">
+              <!-- 树形结构 -->
+              <ul id="treeDemo" class="ztree"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :权限, :class => 'control-label col-lg-2' %>
+        <div class="col-lg-10" style="float: left;">
+          <div class="content_wrap zzjgxx" style="height: 200px;width:100%;border: 1px solid #ccc;overflow: scroll;">
+            <div class="zTreeDemoBackground left">
+              <!-- 树形结构 -->
+              <ul id="qxTreeDemo" class="ztree"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+          <%= f.submit '保存角色信息', :class => 'btn btn-primary' %>
+          <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                      roles_path, :class => 'btn btn-default' %>
+        </div>
+      </div>
+
+  <% end %>
+</div>
+<script>
+  function call(e, tree_id, node) {
+    id = tree_id == 'treeDemo' ? 'role_item_ids' : 'role_permission_ids'
+    var cbs = $("#" + id).next().find(".checkbox-inline");
+    for (var i = 0; i < cbs.length; i++) {
+      if (node.name == $(cbs[i]).text().trim()) {
+        $(cbs[i]).find("input").attr("checked", node.checked);
+      }
+    }
+  }
+
+  function initPage(id, data_url, tree_id) {
+    $.ajax({
+      url: data_url,
+      async: false,
+      success: function (data) {
+        var zNodes = new Array;
+        //将返回的数据拼成理想的树的数据
+        var cbs = $("#" + id).next().find(".checkbox-inline")
+        for (var i = 0; i < data.length; i++) {
+          var node = {
+            id: data[i].id,
+            pId: data[i].pid,
+            name: data[i].name
+          }
+
+          for (var j = 0; j < cbs.length; j++) {
+            if ($(cbs[j]).text().trim() == data[i].name && $(cbs[j]).find("input").attr("checked") == "checked") {
+              node.checked = true;
+            }
+          }
+          zNodes.push(node);
+        }
+        console.info(zNodes);
+        var setting = {
+          data: {
+            simpleData: {
+              enable: true
+            }
+          },
+          view: {
+            expandSpeed: "fast"
+          },
+          check: {
+            enable: true,
+            chkStyle: "checkbox"
+          },
+          callback: {
+            onCheck: call
+          }
+        }
+        $.fn.zTree.init($("#" + tree_id), setting, zNodes);
+      }
+    });
+  }
+  //页面加载完成后初始化树
+  $(document).ready(function () {
+    initPage("role_item_ids", "/items/load_menu", "treeDemo");
+    initPage("role_permission_ids", "/permissions/load_permission_tree", "qxTreeDemo");
+  });
+</script>

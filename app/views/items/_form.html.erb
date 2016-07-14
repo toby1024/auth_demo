@@ -1,0 +1,22 @@
+<div class="modal-dialog" role="document">
+  <%= bootstrap_form_for(@item, layout: :horizontal, :multipart => true, :html => {:class => 'pjax-form'}) do |f| %>
+
+      <%= f.text_field :name, label: "菜单名称", help: "必填" %>
+
+      <%= f.select(:pid,
+                   "<option value=''>#{t('null')}</option>".html_safe + options_from_collection_for_select(parent_menus, "id", "name", @item.pid),
+                   {:label =>"上级菜单"}, {:class => 'form-control'}) %>
+
+
+      <%= f.text_field :url, label: "URL", help: "必填" %>
+      <%= f.text_field :order_number, label: "序号", help: "必填" %>
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+          <%= f.submit '保存菜单信息', :class => 'btn btn-primary' %>
+          <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                      items_path, :class => 'btn btn-default' %>
+        </div>
+      </div>
+
+  <% end %>
+</div>
