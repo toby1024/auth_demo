@@ -15,7 +15,7 @@ local: &local
   pool: 5
   username: root
   password: my123
-  host: 192.168.1.80
+  host: 127.0.0.1
   port: 3306
 
 dev: &dev
@@ -24,7 +24,7 @@ dev: &dev
   timeout: 5000
   username: root
   password: my123
-  host: 192.168.1.80
+  host: 127.0.0.1
   port: 3306
 
 development:
